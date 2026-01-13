@@ -4,13 +4,13 @@
 SAMPLE=sample1
 
 # Input fodler containing fastq files
-INPUT_DIR=/Users/cristian.soitu/Projects/postseq-local-pipeline/data/examples/demo/
+INPUT_DIR=./data/examples/demo/
 
 # Output folder to store results
 OUTPUT_DIR=results
 
 # Reference genome file
-REFERENCE_GENOME=/Users/cristian.soitu/Projects/postseq-local-pipeline/data/reference/GCF_000005845.2_ASM584v2_genomic.fna
+REFERENCE_GENOME=./data/reference/GCF_000005845.2_ASM584v2_genomic.fna
 
 # Parameters
 THREADS=8

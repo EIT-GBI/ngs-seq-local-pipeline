@@ -56,17 +56,41 @@ for R1_FILE in "${R1_FILES[@]}"; do
 
     ## Variant calling with bcftools
     echo "Calling variants for $SAMPLENAME"
+    
     # bcftools mpileup 
     # -O u output uncompressed BCF
     # -f reference genome
+    # -q minimum mapping quality
+    # -a AD,DP to annotate allele depth and total depth
+
     # bcftools call
     # --ploidy 1 for haploid genomes
     # -mv for multiallelic calling and variant sites only
     # -Ob output in compressed BCF format
-    bcftools mpileup -Ou -f "$REFERENCE_GENOME" "$OUTPUT_DIR/$SAMPLENAME.sorted.bam" | \
-        bcftools call --ploidy 1 -mv -Ob -o "$OUTPUT_DIR/$SAMPLENAME.calls.bcf"
+    
+    # bcftools filter
+    # -e expression to filter variants
+    # -Ob output in compressed BCF format
+    
+    bcftools mpileup \
+        -Ou \
+        -f "$REFERENCE_GENOME" \
+        -q "$MIN_MAPQ" \
+        -a AD,DP \
+        "$OUTPUT_DIR/$SAMPLENAME.sorted.bam" \
+        | bcftools call \
+            --ploidy 1 \
+            -mv \
+            -Ou \
+        | bcftools filter \
+            -e "FMT/DP<$MIN_DEPTH || QUAL<$MIN_QUAL" \
+            -Ob \
+            -o "$OUTPUT_DIR/$SAMPLENAME.calls.bcf"
+    
     bcftools index "$OUTPUT_DIR/$SAMPLENAME.calls.bcf"
     
+
+
     ## IGV friendly compressed VCF
     # -Oz output in compressed VCF format
     # -p vcf for tabix indexing
@@ -85,16 +109,12 @@ for R1_FILE in "${R1_FILES[@]}"; do
     ' "$OUTPUT_DIR/$SAMPLENAME.calls.csv" && rm -f "$OUTPUT_DIR/$SAMPLENAME.calls.csv.bak"
 
 
-    # Consensus
+    # Consensus file
     echo "Generating consensus sequence for $SAMPLENAME"
     bcftools consensus -f "$REFERENCE_GENOME" "$OUTPUT_DIR/$SAMPLENAME.calls.bcf" > "$OUTPUT_DIR/$SAMPLENAME.consensus.fna"
 
-
-    ## Export as bigwig file for igvtools using deeptools' bamCoverage
-    echo "Exporting bigwig file for $SAMPLENAME"
-    # -b input BAM file
-    # -o output bigwig file
-    bamCoverage -b "$OUTPUT_DIR/$SAMPLENAME.sorted.bam" -o "$OUTPUT_DIR/$SAMPLENAME.bw"
+    # No more bigWig files, as coverage can be loaded into IGV directly from sorted BAM files
+    # Can be re-added if needed
 
 done
 
