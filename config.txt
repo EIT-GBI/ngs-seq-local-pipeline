@@ -1,0 +1,19 @@
+# Add info about your sample
+
+# Sample name
+SAMPLE=sample1
+
+# Input fodler containing fastq files
+INPUT_DIR=/Users/cristian.soitu/Projects/postseq-local-pipeline/data/examples/demo/
+
+# Output folder to store results
+OUTPUT_DIR=results
+
+# Reference genome file
+REFERENCE_GENOME=/Users/cristian.soitu/Projects/postseq-local-pipeline/data/reference/GCF_000005845.2_ASM584v2_genomic.fna
+
+# Parameters
+THREADS=8
+MIN_MAPQ=20
+MIN_QUAL=20
+MIN_DEPTH=10    
