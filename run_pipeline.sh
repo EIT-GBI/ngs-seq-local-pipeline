@@ -71,7 +71,7 @@ for R1_FILE in "${R1_FILES[@]}"; do
     # bcftools filter
     # -e expression to filter variants
     # -Ob output in compressed BCF format
-    
+
     bcftools mpileup \
         -Ou \
         -f "$REFERENCE_GENOME" \
@@ -90,7 +90,6 @@ for R1_FILE in "${R1_FILES[@]}"; do
     bcftools index "$OUTPUT_DIR/$SAMPLENAME.calls.bcf"
     
 
-
     ## IGV friendly compressed VCF
     # -Oz output in compressed VCF format
     # -p vcf for tabix indexing
@@ -105,7 +104,7 @@ for R1_FILE in "${R1_FILES[@]}"; do
 
 
     sed -i.bak '1i\
-    CHROM,POS,REF,ALT,DP,AD,QUAL,FILTER
+    CHROM,POS,REF,ALT,DP,AD(ref,alt),QUAL,FILTER
     ' "$OUTPUT_DIR/$SAMPLENAME.calls.csv" && rm -f "$OUTPUT_DIR/$SAMPLENAME.calls.csv.bak"
 
 
