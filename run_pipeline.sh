@@ -29,6 +29,10 @@ for R1_FILE in "${R1_FILES[@]}"; do
 
     echo "Processing $R1_FILE"
 
+    # QC block with FastQC
+    echo "Running FastQC for $SAMPLENAME"
+    mkdir -p "$OUTPUT_DIR/qc"
+    fastqc -t "$THREADS" -o "$OUTPUT_DIR/qc" "$R1_FILE" "$R2_FILE"
 
     # Align reads with BWA 
     echo "Aligning reads for $SAMPLENAME"
